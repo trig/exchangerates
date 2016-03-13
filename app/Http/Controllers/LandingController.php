@@ -15,8 +15,16 @@ class LandingController extends BaseController {
         DispatchesJobs,
         ValidatesRequests;
 
-    public function landing(Request $request) {
+    public function landing() {
         return view('landing');
+    }
+    
+    public function about() {
+        return view('about');
+    }
+    
+     public function contact() {
+        return view('contact');
     }
 
 }

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="favicon.ico">
 
-    <title>@section('title', 'Exchangerates')</title>
+    <title>@section('title') Exchangerates @show</title>
     <link href="{{ elixir('css/app.css') }}" rel="stylesheet" type="text/css">
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -18,7 +18,9 @@
     <div class="container">
      @include('blocks.header')
 
-     @section('content', 'no content available')
+     @section('content')
+       no content available
+     @show
 
      @include('blocks.footer')
 
