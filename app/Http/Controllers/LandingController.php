@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use function view;
 
@@ -15,7 +15,11 @@ class LandingController extends BaseController {
         DispatchesJobs,
         ValidatesRequests;
 
-    public function landing() {
+    public function landing(Application $app) {
+        /* @var $provider \App\Contracts\ExchangeRateProvider */
+        $provider = $app[\App\Providers\CBRFExchangeRatesProvider::class];
+        $rates = $provider->getRateValues('AZN , AMD');
+        return print_r($rates, true);
         return view('landing');
     }
     
