@@ -9,6 +9,7 @@ elixir(function(mix) {
     ], 'public/css/app.css');
     
     mix.scripts([
+        'jquery-1.12.1.min.js',
         'bootstrap.min.js',
         'ie-emulation-modes-warning.js',
         'ie10-viewport-bug-workaround.js',

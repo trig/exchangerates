@@ -25,7 +25,9 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule) {
         $schedule->command('currency_rates:fetch')
                 ->timezone('UTC')
-                ->everyFiveMinutes();
+                ->everyFiveMinutes()->then(function(){
+                    \Log::info(sprintf("[sheduler] performed ['currency_rates:fetch'] sheduled task"));
+                });
     }
 
 }

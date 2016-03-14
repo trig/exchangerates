@@ -4,12 +4,25 @@
 
 @section('content')
 <div class='row page_content'>
-    <form class="form-inline">
-        <div class="form-group">
-            <label class="sr-only" for="exampleInputEmail3"></label>
-            <input type="email" class="form-control" id="currency_codes" placeholder="EUR, USD ...">
-        </div>
-        <button type="submit" class="btn btn-info">Show rates</button>
-    </form>
+    <div class="col-md-6">
+        <form>
+            <label>CBRF</label>
+            <select data-name="cbrf" class="js_currency_code form-control">
+                @foreach($currency_codes as $name => $abbrev)
+                <option value="{{ $name }}"@if('USD' == $name)selected @endif>{{ $name }} {{ $abbrev }}</option>
+                @endforeach
+            </select>
+        </form>
+    </div>
+     <div class="col-md-6">
+        <form>
+            <label>YAHOO</label>
+            <select data-name="cbrf" class="js_currency_code form-control">
+                @foreach($currency_codes as $name => $abbrev)
+                <option value="{{ $name }}"@if('USD' == $name)selected @endif>{{ $name }} {{ $abbrev }}</option>
+                @endforeach
+            </select>
+        </form>
+    </div>
 </div>
 @endsection

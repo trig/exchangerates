@@ -16,19 +16,19 @@ class LandingController extends BaseController {
         ValidatesRequests;
 
     public function landing(Application $app) {
-        /* @var $provider \App\Contracts\ExchangeRateProvider */
-        $provider = $app[\App\Providers\YahooFinanceExchangeRatesProvider::class];
-        $rates = $provider->getRateValues('AFA , AMD');
-        return print_r($rates, true);
-        return view('landing');
+        $currencyCodes = (new \App\Providers\Base\BaseEchangeServiceProvider($app))->getCurrencyCodes();
+
+        return view('landing', [
+            'currency_codes' => $currencyCodes
+        ]);
     }
-    
+
     public function about() {
         return view('about');
     }
-    
-     public function contact() {
+
+    public function contact() {
         return view('contact');
     }
-
+    
 }
