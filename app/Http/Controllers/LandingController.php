@@ -17,7 +17,7 @@ class LandingController extends BaseController {
 
     public function landing(Application $app) {
         /* @var $provider \App\Contracts\ExchangeRateProvider */
-        $provider = $app[\App\Providers\CBRFExchangeRatesProvider::class];
+        $provider = $app[\App\Providers\YahooFinanceExchangeRatesProvider::class];
         $rates = $provider->getRateValues('AZN , AMD');
         return print_r($rates, true);
         return view('landing');

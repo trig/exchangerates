@@ -155,7 +155,9 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\CBRFExchangeRatesProvider::class
+        App\Providers\WebRequestorServiceProvider::class,
+        App\Providers\CBRFExchangeRatesProvider::class,
+        App\Providers\YahooFinanceExchangeRatesProvider::class,
 
     ],
 
