@@ -10,7 +10,15 @@ use DOMXPath;
 
 class CBRFExchangeRatesProvider extends BaseEchangeServiceProvider implements ExchangeRateProvider {
 
+    /**
+     * @var string
+     */
     const SERVICE_URL = 'http://www.cbr.ru/scripts/XML_daily.asp';
+    
+    /**
+     * @var string
+     */
+    const NAME = 'cbrf';
 
     /**
      * Register the application services.
@@ -58,9 +66,12 @@ class CBRFExchangeRatesProvider extends BaseEchangeServiceProvider implements Ex
         $xpath = new DOMXPath($doc);
 
         foreach ($currencies as $c) {
-            /* @var $node DOMElement */
-            $node = $xpath->query("//Valute/CharCode[text()=\"{$c}\"]")->item(0);
-            $result['rates'][$c] = $xpath->query($node->parentNode->getNodePath() . '/Value')->item(0)->nodeValue;
+            $nodeList = $xpath->query("//Valute/CharCode[text()=\"{$c}\"]");
+            if(!$nodeList->length){
+                \Log::warning(sprintf('[%s] Currency [%s] not known to provider', self::class, $c));
+                continue;
+            }
+            $result['rates'][$c] = $xpath->query($nodeList->item(0)->parentNode->getNodePath() . '/Value')->item(0)->nodeValue;
         }
 
 

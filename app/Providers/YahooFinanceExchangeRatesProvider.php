@@ -7,7 +7,15 @@ use App\Providers\Base\BaseEchangeServiceProvider;
 
 class YahooFinanceExchangeRatesProvider extends BaseEchangeServiceProvider implements ExchangeRateProvider {
 
+    /**
+     * @var string
+     */
     const SERVICE_URL = 'https://query.yahooapis.com/v1/public/yql';
+
+    /**
+     * @var string
+     */
+    const NAME = 'yahoo_finance';
 
     /**
      * Register the application services.
@@ -63,7 +71,7 @@ class YahooFinanceExchangeRatesProvider extends BaseEchangeServiceProvider imple
 
         foreach ($jsonResponse['query']['results']['rate'] as $yahooRate) {
             $cNormalized = preg_replace('/RUB$/', '', $yahooRate['id']);
-            if (in_array($yahooRate['id'], $currencies)) {
+            if (in_array($yahooRate['id'], $currencies) && 'N/A' != $yahooRate['Rate']) {
                 $result['rates'][$cNormalized] = $yahooRate['Rate'];
             }
         }
