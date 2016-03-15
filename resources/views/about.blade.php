@@ -16,6 +16,16 @@
 
     <p>I've picked Laravel PHP framework for backend and Twitter Bootstrap for frontend</p>
 
-    <p>You can see live demo <a href="{{ route('landing') }}">here</a></p>
+    <ol>
+        <li>All currency exchange providers implementing <a href="https://github.com/trig/exchangerates/blob/master/app/Contracts/ExchangeRateProvider.php">ExchangeRateProvider</a> interface</li>
+        <li>Implemented <a href="https://github.com/trig/exchangerates/blob/master/app/Providers/CBRFExchangeRatesProvider.php">CBRFExchangeRatesProvider</a> of <a href="http://www.cbr.ru/">Central Bank of Russia</a></li>
+        <li>Implemented <a href="https://github.com/trig/exchangerates/blob/master/app/Providers/YahooFinanceExchangeRatesProvider.php">YahooFinanceExchangeRatesProvider</a> of <a href="http://finance.yahoo.com/">Yahoo Finance</a></li>
+        <li>Currency rates fetched from server via AJAX calls with autoupdate each 60 seconds</li>
+        <li>UI logic was built using jQuery</li>
+        <li>All assets (css and js) are built using Gulp</li>
+        <li>Each <a href="https://github.com/trig/exchangerates/blob/master/app/Console/Kernel.php#L28">5 minutes</a> there is <a href="https://github.com/trig/exchangerates/blob/master/app/Console/Commands/FetchCurrencyRates.php">task</a> running on server which fetches new data from above providers and saves it in mysql db</li>
+    </ol>
+
+    <p>You can see code on GitHub <a href="https://github.com/trig/exchangerates">here</a></p>
 </article>
 @endsection
