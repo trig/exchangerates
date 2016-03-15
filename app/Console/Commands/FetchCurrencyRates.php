@@ -61,14 +61,19 @@ class FetchCurrencyRates extends Command {
         if (1000 < $totalEntries) {
             $this->warn('removing old entries...');
             $builder->delete($builder->newQuery()
-                    ->select('id')
-                    ->from('currency_rates')
-                    ->orderBy('id')
-                    ->limit(1)->first('id')->id);
+                            ->select('id')
+                            ->from('currency_rates')
+                            ->orderBy('id')
+                            ->limit(1)->first('id')->id);
         }
 
         $data = [];
         foreach ($this->providers as $pName => $provider) {
+
+            if (!($provider instanceof ExchangeRateProvider)) {
+                throw new \LogicException("Provider [$pName] must implement ExchangeRateProvider interface");
+            }
+            
             $data[$pName] = [];
             $now = time();
             $ts = date('Y-m-d\TH:i:s', $now);
@@ -80,6 +85,7 @@ class FetchCurrencyRates extends Command {
 
             $this->info(sprintf("[%s][%s] resolved [%s/%s] rates", $ts, $pName, count($rates), $currencyCodesCount));
         }
+
 
 
         $builder->insert([
