@@ -15,6 +15,8 @@ Route::get('/', ['uses' =>'LandingController@landing', 'as' => 'landing']);
 Route::get('about', ['uses' =>'LandingController@about', 'as' => 'about']);
 Route::get('contact', ['uses' =>'LandingController@contact', 'as' => 'contact']);
 
+Route::get('ajax/get_rates', ['uses' =>'AjaxController@getRateByProvider', 'as' => 'ajax_get_rates']);
+
 
 /*
 |--------------------------------------------------------------------------

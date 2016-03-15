@@ -16,7 +16,10 @@ class LandingController extends BaseController {
         ValidatesRequests;
 
     public function landing(Application $app) {
-        $currencyCodes = (new \App\Providers\Base\BaseEchangeServiceProvider($app))->getCurrencyCodes();
+        $currencyCodes = (new \App\Providers\Base\BaseEchangeServiceProvider($app))
+                ->getCurrencyCodes();
+        
+        
 
         return view('landing', [
             'currency_codes' => $currencyCodes
