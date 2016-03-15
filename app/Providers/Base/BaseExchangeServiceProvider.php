@@ -4,9 +4,13 @@ namespace App\Providers\Base;
 
 use App\Contracts\HttpRequestProvider;
 use App\Providers\CBRFExchangeRatesProvider;
+use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\ServiceProvider;
+use RuntimeException;
+use function mb_strtoupper;
 
-class BaseEchangeServiceProvider extends ServiceProvider {
+class BaseExchangeServiceProvider extends ServiceProvider {
 
     /**
      * Currency codes
@@ -202,8 +206,40 @@ class BaseEchangeServiceProvider extends ServiceProvider {
      * Returns list of currency codes @see http://www.currencycodes.com/
      * @return array
      */
-    public function getCurrencyCodes(){
+    public function getAllCurrencyCodes(){
         return $this->currencyCodes;
+    }
+    
+    /**
+     * Return currency code and their rate
+     * 
+     * @param string $providerSimpleName
+     * @return array
+     */
+    public function getCurrencyCodeRates($providerSimpleName = CBRFExchangeRatesProvider::NAME){
+        /* cahing */
+        try {
+            return \Cache::remember(md5(self::class . $providerSimpleName), 1, function() use ($providerSimpleName) {
+                        /* @var $builder Builder */
+                        $builder = \DB::table('currency_rates');
+
+                        $rates = $builder->select('rates')->latest()->limit(1)->get();
+
+                        if (!count($rates)) {
+                            throw new RuntimeException('Dataset empty');
+                        }
+
+                        if (!$rates = json_decode($rates[0]->rates, true)) {
+                            throw new RuntimeException('bad data provided from database');
+                        }
+
+                        return $rates[$providerSimpleName];
+                    });
+
+        } catch (Exception $e) {
+            \Log::error(sprintf('[%s] unable fetch data from database', self::class));
+            return [];
+        }
     }
 
     /**

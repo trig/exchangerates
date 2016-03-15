@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use App\Contracts\ExchangeRateProvider;
-use App\Providers\Base\BaseEchangeServiceProvider;
+use App\Providers\Base\BaseExchangeServiceProvider;
 
-class YahooFinanceExchangeRatesProvider extends BaseEchangeServiceProvider implements ExchangeRateProvider {
+class YahooFinanceExchangeRatesProvider extends BaseExchangeServiceProvider implements ExchangeRateProvider {
 
     /**
      * @var string

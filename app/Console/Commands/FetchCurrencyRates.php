@@ -50,7 +50,7 @@ class FetchCurrencyRates extends Command {
 
         date_default_timezone_set('UTC');
 
-        $currencyCodes = array_keys(current($this->providers)->getCurrencyCodes());
+        $currencyCodes = array_keys(current($this->providers)->getAllCurrencyCodes());
         $currencyCodesCount = count($currencyCodes);
 
         /* @var $builder \Illuminate\Database\Query\Builder */
