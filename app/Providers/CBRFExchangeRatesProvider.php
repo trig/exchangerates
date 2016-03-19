@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Contracts\ExchangeRateProvider;
 use App\Providers\Base\BaseExchangeServiceProvider;
 use DOMDocument;
-use DOMElement;
 use DOMXPath;
 
 class CBRFExchangeRatesProvider extends BaseExchangeServiceProvider implements ExchangeRateProvider {
