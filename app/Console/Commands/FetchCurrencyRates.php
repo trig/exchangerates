@@ -5,7 +5,11 @@ namespace App\Console\Commands;
 use App\Contracts\ExchangeRateProvider;
 use App\Providers\CBRFExchangeRatesProvider;
 use App\Providers\YahooFinanceExchangeRatesProvider;
+use App\Services\WebSocketClient;
 use Illuminate\Console\Command;
+use Illuminate\Database\Query\Builder;
+use LogicException;
+use function config;
 
 class FetchCurrencyRates extends Command {
 
@@ -53,7 +57,7 @@ class FetchCurrencyRates extends Command {
         $currencyCodes = array_keys(current($this->providers)->getAllCurrencyCodes());
         $currencyCodesCount = count($currencyCodes);
 
-        /* @var $builder \Illuminate\Database\Query\Builder */
+        /* @var $builder Builder */
         $builder = \DB::table('currency_rates');
 
         /* storing max 1000 entries */
@@ -71,9 +75,9 @@ class FetchCurrencyRates extends Command {
         foreach ($this->providers as $pName => $provider) {
 
             if (!($provider instanceof ExchangeRateProvider)) {
-                throw new \LogicException("Provider [$pName] must implement ExchangeRateProvider interface");
+                throw new LogicException("Provider [$pName] must implement ExchangeRateProvider interface");
             }
-            
+
             $data[$pName] = [];
             $now = time();
             $ts = date('Y-m-d\TH:i:s', $now);
@@ -85,8 +89,6 @@ class FetchCurrencyRates extends Command {
 
             $this->info(sprintf("[%s][%s] resolved [%s/%s] rates", $ts, $pName, count($rates), $currencyCodesCount));
         }
-
-
 
         $builder->insert([
             [

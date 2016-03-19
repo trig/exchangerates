@@ -34,6 +34,8 @@ class AjaxController extends Controller {
             return $this->renderErrorResponse(['bad provider name']);
         }
         
+        (new \App\Services\WebSocketClient(config('services.ws_client.url'), '/broadcast'))->send('test');
+        
         return $this->renderSuccessResponse((new BaseExchangeServiceProvider($app))
                 ->getCurrencyCodeRates($providerNameMap[$provider]));
 

@@ -54,5 +54,36 @@ $(document).on('change', '.js_currency_code', function () {
             }
         });
     }
-})
+
+
+});
+
+$(document).on('ready', function () {
+    if (undefined != window.WebSocket) {
+        var ws = new WebSocket('ws://' + window.location.hostname + ':5555/broadcast');
+        ws.onmessage = function (evt) {
+            var newDataElem = $('<div class="js_new_data alert alert-info alert-dismissible" role="alert" style="display:none;">'
+                    + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                    + '<strong>' + evt.data + '</strong>'
+                    + '</div>');
+            if (!$('.js_new_data').length) {
+                newDataElem.prependTo($('.page_content'));
+            } else {
+                $('.page_content .js_new_data').fadeOut('fast', function () {
+                    $(this).replaceWith(newDataElem);
+                });
+            }
+            
+            newDataElem.fadeIn('fast', function () {
+                setTimeout(function () {
+                    $('.js_new_data').fadeOut('slow', function () {
+                        $(this).remove();
+                    });
+                }, 10000);
+            });
+
+
+        }
+    }
+});
 

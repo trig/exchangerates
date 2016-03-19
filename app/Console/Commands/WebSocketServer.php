@@ -12,7 +12,6 @@ use React\EventLoop\LoopInterface;
 use React\EventLoop\StreamSelectLoop;
 use React\Socket\ConnectionException;
 use RuntimeException;
-use Symfony\Component\Routing\Route;
 
 class WebSocketServer extends Command {
 
@@ -196,7 +195,7 @@ class WebSocketServer extends Command {
         $this->line("\ndumping registered apps:");
         $rows = [];
         foreach ($this->routeApps as $route => $app) {
-            $rows[] = [$route, get_class($app), ($app instanceof \Countable ? $app->count() : 'n/a')];
+            $rows[] = [$route, get_class($app), ($app instanceof Countable ? $app->count() : 'n/a')];
         }
         $this->table(['route', 'app class', 'clients online'], $rows);
     }
