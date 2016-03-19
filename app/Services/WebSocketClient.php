@@ -84,7 +84,8 @@ class WebSocketClient {
     }
 
     /**
-     * We need somehow to deal with non global resolved domains (such from /etc/hosts)
+     * We need somehow to deal with non global resolved domains 
+     * (such that came from /etc/hosts)
      * so we need inject custom dns resolver
      * 
      * @see connect for original implementation
@@ -97,7 +98,12 @@ class WebSocketClient {
     function connect($url, array $subProtocols = [], $headers = [], LoopInterface $loop = null) {
         $loop = $loop ? : ReactFactory::create();
 
-        $connector = new Connector($loop, new EtcHostsDnsResolver('', new Executor($loop, new Parser(), new BinaryDumper())));
+        if (env('APP_ENV') !== 'production') {
+            \Log::warning("using EtcHostsDnsResolver may be potential risk be carefull!");
+            $connector = new Connector($loop, new EtcHostsDnsResolver('', new Executor($loop, new Parser(), new BinaryDumper())));
+        } else {
+            $connector = new Connector($loop);
+        }
         $connection = $connector($url, $subProtocols, $headers);
 
         register_shutdown_function(function() use ($loop) {

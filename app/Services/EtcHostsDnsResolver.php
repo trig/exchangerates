@@ -40,8 +40,9 @@ class EtcHostsDnsResolver extends Resolver {
         }
 
         if (!$resolved) {
-            \Log::debug(sprintf('[%s] Rejected resolving [%s] domain to [%s] ip', EtcHostsDnsResolver::class, $domain, $hData[0]));
-            return reject();
+            \Log::debug(sprintf('[%s] Give a try to default resolver to deal with [%s] domain', EtcHostsDnsResolver::class, $domain));
+            /* give a try to parent */
+            return parent::resolve($domain);
         }
     }
 
