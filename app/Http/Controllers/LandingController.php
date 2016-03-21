@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Providers\Base\BaseExchangeServiceProvider;
 use App\Providers\CBRFExchangeRatesProvider;
 use App\Providers\YahooFinanceExchangeRatesProvider;
+use cebe\markdown\GithubMarkdown;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -19,39 +20,45 @@ class LandingController extends BaseController {
         ValidatesRequests;
 
     public function landing(Application $app) {
-        
+
         $baseProvider = new BaseExchangeServiceProvider($app);
-        
+
         $allCurrencyCodes = $baseProvider->getAllCurrencyCodes();
-        
+
         $cbrfSupportedCodes = array_keys($baseProvider->getCurrencyCodeRates(CBRFExchangeRatesProvider::NAME));
         $yhooSupportedCodes = array_keys($baseProvider->getCurrencyCodeRates(YahooFinanceExchangeRatesProvider::NAME));
-        
+
         $cbrfCodes = [];
         $yhooCodes = [];
-        
-        foreach($cbrfSupportedCodes as $code){
-            $cbrfCodes[$code] = $allCurrencyCodes[$code]; 
+
+        foreach ($cbrfSupportedCodes as $code) {
+            $cbrfCodes[$code] = $allCurrencyCodes[$code];
         }
-        
-        foreach($yhooSupportedCodes as $code){
-            $yhooCodes[$code] = $allCurrencyCodes[$code]; 
+
+        foreach ($yhooSupportedCodes as $code) {
+            $yhooCodes[$code] = $allCurrencyCodes[$code];
         }
-        
-        
+
+
 
         return view('landing', [
             'cbrf_codes' => $cbrfCodes,
-            'yhoo_codes' => $yhooCodes 
+            'yhoo_codes' => $yhooCodes
         ]);
     }
 
     public function about() {
-        return view('about');
+        return view('about', [
+            'readme' => \Cache::remember('readme_markdown', 1440, function() {
+                        $markdownParser = new GithubMarkdown();
+                        $markdown = file_get_contents(app()->basePath() . '/README.md');
+                        return $markdownParser->parse($markdown);
+                    })
+        ]);
     }
 
     public function contact() {
         return view('contact');
     }
-    
+
 }

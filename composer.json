@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "doctrine/dbal": "^2.5",
         "cboden/ratchet": "v0.3.4",
-        "ratchet/pawl": "v0.2.1"
+        "ratchet/pawl": "v0.2.1",
+        "cebe/markdown": "~1.0.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
