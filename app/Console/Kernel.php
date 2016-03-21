@@ -2,6 +2,9 @@
 
 namespace App\Console;
 
+use App\Console\Commands\FetchCurrencyRates;
+use App\Console\Commands\WebSocketServer;
+use App\Contracts\ScheduleConfigurable;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,24 +16,23 @@ class Kernel extends ConsoleKernel {
      * @var array
      */
     protected $commands = [
-        Commands\FetchCurrencyRates::class,
-        Commands\WebSocketServer::class
+        FetchCurrencyRates::class,
+        WebSocketServer::class
     ];
 
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule) {
-        $schedule->command('currency_rates:fetch')
-                ->timezone('UTC')
-                ->everyMinute()
-                ->then(function(){
-                    \Log::info(sprintf("[sheduler] performed ['currency_rates:fetch'] sheduled task"));
-                });
-                // @todo schedule aware intaerface and pass schedule to command
+        foreach ($this->commands as $commandClass) {
+            $command = $this->app->make($commandClass);
+            if ($command instanceof ScheduleConfigurable) {
+                $command->setUpSchedule($schedule);
+            }
+        }
     }
 
 }

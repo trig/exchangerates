@@ -3,15 +3,17 @@
 namespace App\Console\Commands;
 
 use App\Contracts\ExchangeRateProvider;
+use App\Contracts\ScheduleConfigurable;
 use App\Providers\CBRFExchangeRatesProvider;
 use App\Providers\YahooFinanceExchangeRatesProvider;
 use App\Services\WebSocketClient;
 use Illuminate\Console\Command;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Query\Builder;
 use LogicException;
 use function config;
 
-class FetchCurrencyRates extends Command {
+class FetchCurrencyRates extends Command implements ScheduleConfigurable {
 
     /**
      * The name and signature of the console command.
@@ -90,14 +92,30 @@ class FetchCurrencyRates extends Command {
             $this->info(sprintf("[%s][%s] resolved [%s/%s] rates", $ts, $pName, count($rates), $currencyCodesCount));
         }
 
+        $data = json_encode($data);
+
         $builder->insert([
             [
-                'rates' => json_encode($data),
+                'rates' => $data,
                 'created_at' => date('Y-m-d H:i:s')
             ]
         ]);
 
+        (new WebSocketClient(config('services.ws_client.url'), '/broadcast'))->send($data);
+
         $this->info(sprintf("[%s] data persisted", $ts));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setUpSchedule(Schedule $schedule) {
+        $schedule->command('currency_rates:fetch')
+                ->timezone('UTC')
+                ->everyFiveMinutes()
+                ->then(function() {
+                    \Log::info(sprintf("[sheduler] performed ['currency_rates:fetch'] sheduled task"));
+                });
     }
 
 }
